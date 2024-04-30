@@ -2,6 +2,8 @@
 #Request e Responses em baixo
 
 from datetime import datetime
+from typing import Optional
+
 from sqlalchemy import String, Column, Integer, Boolean, DateTime
 from sqlalchemy_utils import EmailType, ChoiceType
 
@@ -54,7 +56,7 @@ class Escritorio(Base):
             "cep": self.cep,
             "complemento": self.complemento,
             "cidade": self.cidade,
-            "estado": self.estado.value,
+            "estado": self.estado.code,
             "bairro": self.bairro,
             "ativo": self.ativo,
             "dataUltAlt": f"{self.dataUltAlt}",
@@ -66,14 +68,14 @@ from pydantic import BaseModel
 class EscritorioResponse(BaseModel):
     escritorioId: int
     nomeFantasia: str
-    cnpj: str
+    cnpj: Optional[str]
     telefone: str
     email: str
     inscEstadual: str
     endereco: str
     numero: int
     cep: str
-    complemento: str
+    complemento: Optional[str]
     cidade: str
     estado: str
     bairro: str

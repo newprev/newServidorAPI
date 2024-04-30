@@ -1,7 +1,7 @@
 from database.dbConnectionHandler import DBConnHandler
 from models.advogadosModel import Advogado
 
-from sqlalchemy.orm.exec import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class AdvogadoRepository:

@@ -1,7 +1,7 @@
 from database.dbConnectionHandler import DBConnHandler
 from models.escritoriosModel import Escritorio
 
-from sqlalchemy.orm.exec import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class EscritorioRepository:
