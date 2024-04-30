@@ -19,4 +19,7 @@ app.include_router(advogadoRouter)
 app.include_router(escritorioRouter)
 
 if __name__ == '__main__':
+    from database.database import Base, engine
+
+    Base.metadata.create_all(engine)
     uvicorn.run(app, host='0.0.0.0', port=8000)

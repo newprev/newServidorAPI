@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from models.advogadosModel import AdvogadoResponse, Advogado
 from repository.advogadoRep import AdvogadoRepository
 
@@ -18,7 +18,21 @@ def buscaTodos() -> List[AdvogadoResponse]:
     listaAllResponse: List[AdvogadoResponse]
 
     listaAllAdv = advRepository.selectAll()
+    if listaAllAdv is None:
+        raise HTTPException(status_code=404, detail='Nenhum advogado foi encontrado')
     listaAllResponse = [AdvogadoResponse(**adv.toDict()) for adv in listaAllAdv]
 
     return listaAllResponse
+
+@advogadoRouter.get('/{advogadoId}', response_model=AdvogadoResponse, status_code=200)
+def buscaPorAdvogadoPorId(advogadoId: int) -> AdvogadoResponse:
+    """
+    Busca o advogado dado Id
+    """
+    advRepository: AdvogadoRepository = AdvogadoRepository()
+    advogadoProcurado: Advogado = advRepository.buscaPorId(advogadoId)
+    if advogadoProcurado is None:
+        raise HTTPException(status_code=404, detail='Advogado não encontrado')
+
+    return advogadoProcurado
 
