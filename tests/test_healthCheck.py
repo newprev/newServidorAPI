@@ -5,7 +5,8 @@ from main import app
 
 client = TestClient(app)
 
-def testando_healthCheck():
+
+def test_healthCheck_deve_voltar_200():
     response: Response = client.get("/healthCheck/ping")
     assert response.status_code == 200
     assert response.json()['statusService'] == "online"

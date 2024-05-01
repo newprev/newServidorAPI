@@ -12,3 +12,5 @@ models/__pycache__/
 .env
 
 .idea/
+
+__pycache__/
