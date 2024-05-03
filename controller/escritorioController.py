@@ -40,3 +40,13 @@ def buscaEscritorioPorId(escritorioId: int) -> EscritorioResponse:
 
     return escritorioResponse
 
+@escritorioRouter.post('/escritorio', response_model=EscritorioResponse, status_code=201)
+def insereEscritorio() -> EscritorioResponse:
+    """
+    Insere escritório
+    """
+    try:
+        pass
+    except Exception as err:
+        return err
+

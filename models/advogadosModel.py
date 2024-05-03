@@ -3,11 +3,14 @@
 
 from datetime import datetime
 from sqlalchemy import ForeignKey, String, Column, Integer, Boolean, DateTime
-from sqlalchemy.orm import relationship
-from sqlalchemy_utils import EmailType
+from sqlalchemy_utils import EmailType, PasswordType
 
 from database.database import Base
 
+SCHEMES = [
+    'pbkdf2_sha512',
+    'md5_crypt'
+]
 
 class Advogado(Base):
     __tablename__ = "Advogados"
@@ -17,7 +20,7 @@ class Advogado(Base):
     primeiroNome = Column(String(20), nullable=False)
     sobrenome = Column(String(40), nullable=False)
     email = Column(EmailType, nullable=False, unique=True)
-    senha = Column(String(30), nullable=False)
+    senha = Column(PasswordType(schemes=SCHEMES), nullable=False)
     numeroOAB = Column(String(9), nullable=False, unique=True)
     cpf = Column(String(11), nullable=False, unique=True)
     nacionalidade = Column(String(40), default='brasileiro', nullable=False)
@@ -25,7 +28,6 @@ class Advogado(Base):
     admin = Column(Boolean, default=False)
     ativo = Column(Boolean, default=True)
     confirmado = Column(Boolean, default=False)
-    # fotoPath = models.ImageField(upload_to='foto/%Y/%m', blank=True)
     dataUltAlt = Column(DateTime, default=datetime.now, nullable=False)
     dataCadastro = Column(DateTime, default=datetime.now, nullable=False)
 

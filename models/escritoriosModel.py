@@ -22,26 +22,12 @@ class Escritorio(Base):
     telefone = Column(String(11), nullable=True, unique=True)
     email = Column(EmailType, unique=True)
     inscEstadual = Column(String(9), nullable=True, unique=True)
-    endereco = Column(String(80))
-    numero = Column(Integer, nullable=True)
-    cep = Column(String(8))
-    complemento = Column(String(50))
-    cidade = Column(String(30))
-    estado = Column(ChoiceType(ESTADO), nullable=False, default='SP')
-    bairro = Column(String(50))
     ativo = Column(Boolean, default=True)
-    # logoPath = models.ImageField(upload_to='logo/%Y/%m')
     dataUltAlt = Column(DateTime, default=datetime.now(), nullable=False)
     dataCadastro = Column(DateTime, default=datetime.now(), nullable=False)
 
-    def get_nomeFantasia(self):
-        return self.nomeFantasia
-
     def __str__(self):
         return self.username
-
-    def retEmail(self):
-        return self.email
 
     def toDict(self):
         return {
@@ -51,13 +37,6 @@ class Escritorio(Base):
             "telefone": self.telefone,
             "email": self.email,
             "inscEstadual": self.inscEstadual,
-            "endereco": self.endereco,
-            "numero": self.numero,
-            "cep": self.cep,
-            "complemento": self.complemento,
-            "cidade": self.cidade,
-            "estado": self.estado.code,
-            "bairro": self.bairro,
             "ativo": self.ativo,
             "dataUltAlt": f"{self.dataUltAlt}",
             "dataCadastro": f"{self.dataCadastro}"
@@ -72,13 +51,13 @@ class EscritorioResponse(BaseModel):
     telefone: str
     email: str
     inscEstadual: str
-    endereco: str
-    numero: int
-    cep: str
-    complemento: Optional[str]
-    cidade: str
-    estado: str
-    bairro: str
     ativo: bool
     dataUltAlt: datetime
     dataCadastro: datetime
+
+class EscritorioRequest(BaseModel):
+    nomeFantasia: str
+    cnpj: Optional[str]
+    telefone: str
+    email: str
+    inscEstadual: str

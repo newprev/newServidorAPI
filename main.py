@@ -6,17 +6,25 @@ from fastapi import FastAPI
 from controller.healthCheckController import healthCheckRouter
 from controller.advogadoController import advogadoRouter
 from controller.escritorioController import escritorioRouter
+from controller.enderecoController import enderecoRouter
 
 from models.advogadosModel import Advogado
 from models.escritoriosModel import Escritorio
+from models.enderecoModel import Endereco
 
 app = FastAPI()
+
+origens = [
+    
+]
 
 
 #Incluindo rotas
 app.include_router(healthCheckRouter)
 app.include_router(advogadoRouter)
 app.include_router(escritorioRouter)
+app.include_router(enderecoRouter)
+
 
 if __name__ == '__main__':
     from database.database import Base
