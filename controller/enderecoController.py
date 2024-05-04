@@ -13,20 +13,17 @@ def buscaTodos() -> List[EnderecoRequest]:
     """
     Retorna todos os enderecos cadastrados no banco
     """
-    try:
-        enderecoRepository: EnderecoRepository = EnderecoRepository()
-        listaAllEnderecos: List[Endereco]
-        listaAllResponse: List[EnderecoResponse]
+    enderecoRepository: EnderecoRepository = EnderecoRepository()
+    listaAllEnderecos: List[Endereco]
+    listaAllResponse: List[EnderecoResponse]
 
-        listaAllEnderecos = enderecoRepository.selectAll()
-        if listaAllEnderecos is None:
-            raise HTTPException(status_code=404, detail='Nenhum escritório encontrado')
-        listaAllResponse = [EnderecoResponse(**endereco.toDict()) for endereco in listaAllEnderecos]
+    listaAllEnderecos = enderecoRepository.selectAll()
+    if listaAllEnderecos is None:
+        raise HTTPException(status_code=404, detail='Nenhum endereço encontrado')
+    listaAllResponse = [EnderecoResponse(**endereco.toDict()) for endereco in listaAllEnderecos]
 
-        return listaAllResponse
+    return listaAllResponse
 
-    except Exception as err:
-        return err
 
 @enderecoRouter.get('/{enderecoId}', response_model=EnderecoResponse, status_code=200)
 def buscaEnderecoPorId(enderecoId: int) -> EnderecoResponse:
@@ -36,7 +33,33 @@ def buscaEnderecoPorId(enderecoId: int) -> EnderecoResponse:
     enderecoRepository: EnderecoRepository = EnderecoRepository()
     enderecoBuscado: Endereco = enderecoRepository.buscaEnderecoPorId(enderecoId)
     if enderecoBuscado is None:
-        raise HTTPException(status_code=404, detail='Nenhum escritório encontrado')
+        raise HTTPException(status_code=404, detail='Nenhum endereço encontrado')
     enderecoResponse = EnderecoResponse(**enderecoBuscado.toDict())
 
     return enderecoResponse
+
+@enderecoRouter.get('/escritorio/{escritorioId}', response_model=List[EnderecoResponse], status_code=200)
+def buscaEnderecoPorEscritorioId(escritorioId: int) -> List[EnderecoResponse]:
+    """
+    Retorna endereco cadastrado no banco, dado escritorioId
+    """
+    enderecoRepository: EnderecoRepository = EnderecoRepository()
+    listaEnderecosBuscados: List[Endereco] = enderecoRepository.buscaPorEscritorioId(escritorioId)
+    if listaEnderecosBuscados is None:
+        raise HTTPException(status_code=404, detail='Nenhum endereço encontrado')
+    listaEnderecosResponse = [EnderecoResponse(**endereco.toDict()) for endereco in listaEnderecosBuscados]
+
+    return listaEnderecosResponse
+
+@enderecoRouter.get('/advogado/{advogadoId}', response_model=List[EnderecoResponse], status_code=200)
+def buscaEnderecoPorAdvogadoId(advogadoId: int) -> List[EnderecoResponse]:
+    """
+    Retorna endereco cadastrado no banco, dado advogadoId
+    """
+    enderecoRepository: EnderecoRepository = EnderecoRepository()
+    listaEnderecosBuscados: List[Endereco] = enderecoRepository.buscaPorAdvogadoId(advogadoId)
+    if listaEnderecosBuscados is None:
+        raise HTTPException(status_code=404, detail='Nenhum endereço encontrado')
+    listaEnderecosResponse = [EnderecoResponse(**endereco.toDict()) for endereco in listaEnderecosBuscados]
+
+    return listaEnderecosResponse

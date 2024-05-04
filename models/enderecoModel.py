@@ -36,16 +36,18 @@ class Endereco(Base):
     def toDict(self):
         return {
             "enderecoId": self.enderecoId,
+            "escritorioId": self.escritorioId,
+            "advogadoId": self.advogadoId,
             "endereco": self.endereco,
             "numero": self.numero,
             "cep": self.cep,
             "complemento": self.complemento,
             "cidade": self.cidade,
-            "estado": self.estado,
+            "estado": self.estado.code,
             "bairro": self.bairro,
             "ativo": self.ativo,
-            "dataUltAlt": self.dataUltAlt,
-            "dataCadastro": self.dataCadastro
+            "dataUltAlt": f"{self.dataUltAlt}",
+            "dataCadastro": f"{self.dataCadastro}"
         }
 
 
@@ -57,7 +59,7 @@ class EnderecoResponse(BaseModel):
     endereco: str
     numero: int
     cep: str
-    complemento: str
+    complemento: Optional[str]
     cidade: str
     estado: str
     bairro: str
@@ -69,7 +71,7 @@ class EnderecoRequest(BaseModel):
     endereco: str
     numero: int
     cep: str
-    complemento: str
+    complemento: Optional[str]
     cidade: str
     estado: str
     bairro: str

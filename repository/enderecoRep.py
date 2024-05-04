@@ -30,3 +30,35 @@ class EnderecoRepository:
         except Exception as err:
             db.session.rollback()
             return err
+
+    def buscaPorEscritorioId(self, escritorioId: int):
+        try:
+            with DBConnHandler() as db:
+                data = db.session.query(Endereco).filter(Endereco.escritorioId == escritorioId).all()
+                if len(data) == 0:
+                    raise NoResultFound
+
+                return data
+
+        except NoResultFound:
+            return None
+
+        except Exception as err:
+            db.session.rollback()
+            return err
+
+    def buscaPorAdvogadoId(self, advogadoId: int):
+        try:
+            with DBConnHandler() as db:
+                data = db.session.query(Endereco).filter(Endereco.advogadoId == advogadoId).all()
+                if len(data) == 0:
+                    raise NoResultFound
+
+                return data
+
+        except NoResultFound:
+            return None
+
+        except Exception as err:
+            db.session.rollback()
+            return err
