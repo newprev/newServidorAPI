@@ -6,10 +6,12 @@ from controller.healthCheckController import healthCheckRouter
 from controller.advogadoController import advogadoRouter
 from controller.escritorioController import escritorioRouter
 from controller.enderecoController import enderecoRouter
+from controller.contatoController import contatoRouter
 
 from models.advogadosModel import Advogado
 from models.escritoriosModel import Escritorio
 from models.enderecoModel import Endereco
+from models.contatoModel import Contato
 
 app = FastAPI()
 
@@ -30,6 +32,7 @@ app.include_router(healthCheckRouter)
 app.include_router(advogadoRouter)
 app.include_router(escritorioRouter)
 app.include_router(enderecoRouter)
+app.include_router(contatoRouter)
 
 
 if __name__ == '__main__':
