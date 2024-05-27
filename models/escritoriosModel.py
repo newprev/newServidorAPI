@@ -2,7 +2,7 @@
 #Request e Responses em baixo
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from sqlalchemy import String, Column, Integer, Boolean, DateTime
 from sqlalchemy_utils import EmailType, ChoiceType
@@ -61,3 +61,20 @@ class EscritorioRequest(BaseModel):
     telefone: str
     email: str
     inscEstadual: str
+
+class EscritorioPostRequest(BaseModel):
+    # Escritorio
+    nomeFantasia: str
+    cnpj: Optional[str]
+    telefone: str
+    email: str
+    inscEstadual: str
+
+    # Endereco
+    endereco: str
+    numero: int
+    cep: str
+    complemento: Optional[str]
+    cidade: str
+    estado: str
+    bairro: str

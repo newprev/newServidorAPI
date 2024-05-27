@@ -1,4 +1,5 @@
 from typing import List
+from sqlalchemy_utils import Choice
 
 frequenciaPlano = [
     ('ME', 'Mensal'),
@@ -21,7 +22,7 @@ def listaFrequenciaPlanos():
 def getEstados():
     return [
         ('AC', 'Acre'),
-        ('AL','Alagoas'),
+        ('AL', 'Alagoas'),
         ('AP', 'Amapá'),
         ('AM', 'Amazonas'),
         ('BA', 'Bahia'),
@@ -49,35 +50,41 @@ def getEstados():
         ('TO', 'Tocantins')
     ]
 
-def getEstadosDict() -> List:
-    return [
-        {'nome': 'São Paulo', 'uf': 'SP'},
-        {'nome': 'Acre', 'uf': 'AC'},
-        {'nome': 'Alagoas', 'uf': 'AL'},
-        {'nome': 'Amapá', 'uf': 'AP'},
-        {'nome': 'Amazonas', 'uf': 'AM'},
-        {'nome': 'Bahia', 'uf': 'BA'},
-        {'nome': 'Ceará', 'uf': 'CE'},
-        {'nome': 'Distrito Federal', 'uf': 'DF'},
-        {'nome': 'Espírito Santo', 'uf': 'ES'},
-        {'nome': 'Goiás', 'uf': 'GO'},
-        {'nome': 'Maranhão', 'uf': 'MA'},
-        {'nome': 'Mato Grosso', 'uf': 'MT'},
-        {'nome': 'Mato Grosso do Sul', 'uf': 'MS'},
-        {'nome': 'Minas Gerais', 'uf': 'MG'},
-        {'nome': 'Pará', 'uf': 'PA'},
-        {'nome': 'Paraíba', 'uf': 'PB'},
-        {'nome': 'Paraná', 'uf': 'PR'},
-        {'nome': 'Pernambuco', 'uf': 'PE'},
-        {'nome': 'Piauí', 'uf': 'PI'},
-        {'nome': 'Rio de Janeiro', 'uf': 'RJ'},
-        {'nome': 'Rio Grande do Norte', 'uf': 'RN'},
-        {'nome': 'Rondônia', 'uf': 'RO'},
-        {'nome': 'Roraima', 'uf': 'RR'},
-        {'nome': 'Santa Catarina', 'uf': 'SC'},
-        {'nome': 'Sergipe', 'uf': 'SE'},
-        {'nome': 'Tocantins', 'uf': 'TO'},
-    ]
+
+def getEstadosDict() -> dict:
+    return {
+        'SP': 'São Paulo',
+        'AC': 'Acre',
+        'AL': 'Alagoas',
+        'AP': 'Amapá',
+        'AM': 'Amazonas',
+        'BA': 'Bahia',
+        'CE': 'Ceará',
+        'DF': 'Distrito Federal',
+        'ES': 'Espírito Santo',
+        'GO': 'Goiás',
+        'MA': 'Maranhão',
+        'MT': 'Mato Grosso',
+        'MS': 'Mato Grosso do Sul',
+        'MG': 'Minas Gerais',
+        'PA': 'Pará',
+        'PB': 'Paraíba',
+        'PR': 'Paraná',
+        'PE': 'Pernambuco',
+        'PI': 'Piauí',
+        'RJ': 'Rio de Janeiro',
+        'RN': 'Rio Grande do Norte',
+        'RO': 'Rondônia',
+        'RR': 'Roraima',
+        'SC': 'Santa Catarina',
+        'SE': 'Sergipe',
+        'TO': 'Tocantins'
+    }
+
+
+def decideEstado(siglaEstado: str) -> Choice:
+    dictEstados: dict = getEstadosDict()[siglaEstado]
+    return Choice(code=siglaEstado, value=dictEstados)
 
 
 def getTipoAuth() -> List:

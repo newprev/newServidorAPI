@@ -14,3 +14,5 @@ models/__pycache__/
 .idea/
 
 __pycache__/
+
+poetry.lock

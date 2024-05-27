@@ -1,14 +1,19 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException
-from models.escritoriosModel import Escritorio, EscritorioResponse
+from fastapi import APIRouter, HTTPException, status
+from pymysql import IntegrityError
+from sqlalchemy_utils import Choice
+
+from models.escritoriosModel import Escritorio, EscritorioResponse, EscritorioPostRequest
+from models.enderecoModel import Endereco
 from repository.escritorioRep import EscritorioRepository
+from utils.helpers import decideEstado
 
 TAG_PREFIX = "/escritorio"
 escritorioRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])
 
 
-@escritorioRouter.get('/all', response_model=List[EscritorioResponse], status_code=200)
+@escritorioRouter.get('/all', response_model=List[EscritorioResponse], status_code=status.HTTP_200_OK)
 def buscaTodos() -> List[EscritorioResponse]:
     """
     Retorna todos os advogados cadastrados no banco
@@ -27,7 +32,7 @@ def buscaTodos() -> List[EscritorioResponse]:
     except Exception as err:
         return err
 
-@escritorioRouter.get('/{escritorioId}', response_model=EscritorioResponse, status_code=200)
+@escritorioRouter.get('/{escritorioId}', response_model=EscritorioResponse, status_code=status.HTTP_200_OK)
 def buscaEscritorioPorId(escritorioId: int) -> EscritorioResponse:
     """
     Retorna todos os advogados cadastrados no banco
@@ -40,13 +45,54 @@ def buscaEscritorioPorId(escritorioId: int) -> EscritorioResponse:
 
     return escritorioResponse
 
-@escritorioRouter.post('/escritorio', response_model=EscritorioResponse, status_code=201)
-def insereEscritorio() -> EscritorioResponse:
+@escritorioRouter.post('/', status_code=status.HTTP_201_CREATED)
+def insereEscritorio(escritorioPost: EscritorioPostRequest):
     """
-    Insere escritório
+    Insere escritório por meio do modelo EscritorioPostRequest
     """
-    try:
-        pass
-    except Exception as err:
-        return err
+    enderecoModel = Endereco(
+        endereco=escritorioPost.endereco,
+        numero=escritorioPost.numero,
+        cep=escritorioPost.cep,
+        complemento=escritorioPost.complemento,
+        cidade=escritorioPost.cidade,
+        estado=decideEstado(escritorioPost.estado),
+        bairro=escritorioPost.bairro
+    )
+    escritorioModel = Escritorio(
+        nomeFantasia=escritorioPost.nomeFantasia,
+        cnpj=escritorioPost.cnpj,
+        telefone=escritorioPost.telefone,
+        email=escritorioPost.email,
+        inscEstadual=escritorioPost.inscEstadual
+    )
 
+    escritorioRepository: EscritorioRepository = EscritorioRepository()
+    escritorioInserido: dict = escritorioRepository.insreNovoEscritorio(escritorioModel, enderecoModel)
+
+    if not escritorioInserido:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Não foi possível inserir o escritório"
+        )
+
+    return escritorioInserido
+
+@escritorioRouter.delete('/{escritorioId}', status_code=status.HTTP_200_OK)
+def deletaEscritorio(escritorioId: int) -> dict:
+    """
+    Deleta Escritorio dado escritorioId
+    """
+
+    escritorioRepository: EscritorioRepository = EscritorioRepository()
+    escritorioIdDeletado: int = escritorioRepository.deletaEscritorioPorId(escritorioId)
+
+    if not escritorioIdDeletado or escritorioIdDeletado == -1:
+        raise HTTPException(
+            status_code=status.HTTP_304_NOT_MODIFIED,
+            detail="Escritório não deletado"
+        )
+
+    return {
+        "escritorioIdDeletado": escritorioIdDeletado
+    }
