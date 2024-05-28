@@ -12,8 +12,8 @@ class Contato(Base):
     __tablename__ = "Contato"
 
     contatoId = Column(Integer, primary_key=True, autoincrement=True)
-    escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId"))
-    advogadoId = Column(Integer, ForeignKey("Advogados.advogadoId"))
+    escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId", ondelete='CASCADE'))
+    advogadoId = Column(Integer, ForeignKey("Advogados.advogadoId", ondelete='CASCADE'))
     numero = Column(BigInteger, unique=True, nullable=False)
     ehWatsapp = Column(Boolean, default=True, nullable=False)
     ehTelegram = Column(Boolean, default=True, nullable=False)

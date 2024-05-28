@@ -8,7 +8,6 @@ from main import app
 
 client = TestClient(app)
 
-
 corretoEnderecoId: int = 1
 erradoEnderecoId: int = 1000
 corretoEscritorioId: int = 1

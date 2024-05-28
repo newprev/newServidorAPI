@@ -17,8 +17,8 @@ class Endereco(Base):
     ESTADO = getEstados()
 
     enderecoId = Column(Integer, primary_key=True, autoincrement=True)
-    escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId"))
-    advogadoId = Column(Integer, ForeignKey("Advogados.advogadoId"))
+    escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId", ondelete='CASCADE'))
+    advogadoId = Column(Integer, ForeignKey("Advogados.advogadoId", ondelete='CASCADE'))
     endereco = Column(String(80))
     numero = Column(Integer, nullable=True)
     cep = Column(String(8))
