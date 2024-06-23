@@ -1,13 +1,11 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException, status
-from pymysql import IntegrityError
-from sqlalchemy_utils import Choice
 
-from models.escritoriosModel import Escritorio, EscritorioResponse, EscritorioPostRequest
-from models.enderecoModel import Endereco
-from repository.escritorioRep import EscritorioRepository
-from utils.helpers import decideEstado
+from src.models.escritoriosModel import Escritorio, EscritorioResponse, EscritorioPostRequest
+from src.models.enderecoModel import Endereco
+from src.repository.escritorioRep import EscritorioRepository
+from src.utils.helpers import decideEstado
 
 TAG_PREFIX = "/escritorio"
 escritorioRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])

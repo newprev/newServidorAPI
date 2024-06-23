@@ -95,6 +95,14 @@ def getTipoAuth() -> List:
     ]
 
 
+def getAuthDeOnde() -> List:
+    return [
+        ('S', 'Site'),
+        ('M', 'Mobile'),
+        ('D', 'Desktop')
+    ]
+
+
 def campoAlterado(campoOriginal, campoAlterado) -> bool:
     if campoAlterado is None or campoAlterado == '':
         return False

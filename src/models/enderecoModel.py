@@ -7,8 +7,8 @@ from typing import Optional
 from sqlalchemy import String, Column, Integer, Boolean, DateTime, ForeignKey
 from sqlalchemy_utils import ChoiceType
 
-from database.database import Base
-from utils.helpers import getEstados
+from src.database.database import Base
+from src.utils.helpers import getEstados
 
 
 class Endereco(Base):
@@ -18,7 +18,7 @@ class Endereco(Base):
 
     enderecoId = Column(Integer, primary_key=True, autoincrement=True)
     escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId", ondelete='CASCADE'))
-    advogadoId = Column(Integer, ForeignKey("Advogados.advogadoId", ondelete='CASCADE'))
+    advogadoId = Column(Integer, ForeignKey("Advogado.advogadoId", ondelete='CASCADE'))
     endereco = Column(String(80))
     numero = Column(Integer, nullable=True)
     cep = Column(String(8))

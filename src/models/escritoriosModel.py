@@ -2,13 +2,13 @@
 #Request e Responses em baixo
 
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional
 
 from sqlalchemy import String, Column, Integer, Boolean, DateTime
-from sqlalchemy_utils import EmailType, ChoiceType
+from sqlalchemy_utils import EmailType
 
-from database.database import Base
-from utils.helpers import getEstados
+from src.database.database import Base
+from src.utils.helpers import getEstados
 
 
 class Escritorio(Base):

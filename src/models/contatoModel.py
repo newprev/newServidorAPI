@@ -5,7 +5,7 @@ from datetime import datetime
 from sqlalchemy import ForeignKey, Column, Integer, BigInteger, Boolean, DateTime
 from typing import Optional
 
-from database.database import Base
+from src.database.database import Base
 
 
 class Contato(Base):
@@ -13,7 +13,7 @@ class Contato(Base):
 
     contatoId = Column(Integer, primary_key=True, autoincrement=True)
     escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId", ondelete='CASCADE'))
-    advogadoId = Column(Integer, ForeignKey("Advogados.advogadoId", ondelete='CASCADE'))
+    advogadoId = Column(Integer, ForeignKey("Advogado.advogadoId", ondelete='CASCADE'))
     numero = Column(BigInteger, unique=True, nullable=False)
     ehWatsapp = Column(Boolean, default=True, nullable=False)
     ehTelegram = Column(Boolean, default=True, nullable=False)

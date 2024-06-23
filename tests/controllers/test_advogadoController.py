@@ -1,10 +1,8 @@
-from typing import List
-
 from fastapi.testclient import TestClient
 from httpx import Response
-from models.advogadosModel import AdvogadoResponse
 
 from main import app
+from src.models.advogadosModel import AdvogadoResponse
 
 client = TestClient(app)
 advogadoId: int = 1

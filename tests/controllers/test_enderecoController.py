@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi.testclient import TestClient
 from httpx import Response
-from models.enderecoModel import EnderecoResponse
+from src.models.enderecoModel import EnderecoResponse
 
 from main import app
 

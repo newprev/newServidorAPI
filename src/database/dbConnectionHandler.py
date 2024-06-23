@@ -14,7 +14,7 @@ class DBConnHandler:
 
     def __geraUrlConnection(self) -> URL:
         # Carregando variáveis de ambiente
-        pathEnvVars = Path('.') / '.env'
+        pathEnvVars = Path('') / '.env'
         if not pathEnvVars.is_file():
             print(f'{pathEnvVars.absolute()=}')
             raise Exception('Não foi possível encontrar o arquivo com as variáveis de ambiente.')

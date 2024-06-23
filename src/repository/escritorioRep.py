@@ -1,8 +1,8 @@
 from sqlalchemy.exc import IntegrityError
 
-from database.dbConnectionHandler import DBConnHandler
-from models.escritoriosModel import Escritorio
-from models.enderecoModel import Endereco
+from src.database.dbConnectionHandler import DBConnHandler
+from src.models.escritoriosModel import Escritorio
+from src.models.enderecoModel import Endereco
 
 from sqlalchemy.orm.exc import NoResultFound
 

@@ -2,16 +2,12 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from controller.healthCheckController import healthCheckRouter
-from controller.advogadoController import advogadoRouter
-from controller.escritorioController import escritorioRouter
-from controller.enderecoController import enderecoRouter
-from controller.contatoController import contatoRouter
-
-from models.advogadosModel import Advogado
-from models.escritoriosModel import Escritorio
-from models.enderecoModel import Endereco
-from models.contatoModel import Contato
+from src.controller.healthCheckController import healthCheckRouter
+from src.controller.advogadoController import advogadoRouter
+from src.controller.escritorioController import escritorioRouter
+from src.controller.enderecoController import enderecoRouter
+from src.controller.contatoController import contatoRouter
+from src.controller.prevAuthController import prevAuthRouter
 
 app = FastAPI()
 
@@ -33,11 +29,12 @@ app.include_router(advogadoRouter)
 app.include_router(escritorioRouter)
 app.include_router(enderecoRouter)
 app.include_router(contatoRouter)
+app.include_router(prevAuthRouter)
 
 
 if __name__ == '__main__':
-    from database.database import Base
-    from database.dbConnectionHandler import DBConnHandler
+    from src.database.database import Base
+    from src.database.dbConnectionHandler import DBConnHandler
 
     connHandler: DBConnHandler = DBConnHandler()
 

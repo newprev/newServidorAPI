@@ -1,11 +1,11 @@
+from pydantic import ValidationError
 from validate_docbr import CPF, CNPJ
 import re as regex
-from django.core.exceptions import ValidationError
 
-from utils.enums.exceptionCodesEnums import NewValidationError
+from src.utils.enums.exceptionCodesEnums import NewValidationError
 
 
-def validaCpf(numeroCpf: str):
+def validaCpf(numeroCpf: str) -> bool:
     cpf = CPF()
     return cpf.validate(numeroCpf)
 
@@ -14,12 +14,14 @@ def validaCNPJ(numeroCNPJ: str):
     cnpj = CNPJ()
     return cnpj.validate(numeroCNPJ)
 
-def validaEmail(email: str):
+
+def validaEmail(email: str) -> bool:
     padrao: str = "[a-z0-9.]+@[a-z0-9]+.[a-z]+.([a-z]+)?"
     if email is not None and regex.match(padrao, email) is None:
-        raise ValidationError(NewValidationError.emailInvalido.value)
+        # raise ValidationError(NewValidationError.emailInvalido.value)
+        return False
     else:
-        return email
+        return True
 
 
 def validaApenasNumero(numero: str):

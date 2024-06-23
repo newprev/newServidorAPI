@@ -6,7 +6,7 @@ authors = ["Israel Alves <israel.usp@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "3.12.*"
 fastapi = "^0.110.2"
 SQLAlchemy = "^2.0.29"
 uvicorn = "^0.29.0"
@@ -16,15 +16,20 @@ python-dotenv = "^1.0.1"
 pymysql = "^1.1.0"
 sqlalchemy-utils = "^0.41.2"
 passlib = "^1.7.4"
+validate-docbr = "^1.10.0"
 
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = "-p no:warnings"
+
+[tool.taskipy.tasks]
+run-dev = "fastapi dev main.py"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.2"
 faker = "^25.2.0"
+taskipy = "^1.13.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-test = "python -m pytest tests/"

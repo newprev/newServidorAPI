@@ -1,14 +1,14 @@
-from database.dbConnectionHandler import DBConnHandler
-from models.enderecoModel import Endereco
+from src.database.dbConnectionHandler import DBConnHandler
+from src.models.contatoModel import Contato
 
 from sqlalchemy.orm.exc import NoResultFound
 
 
-class EnderecoRepository:
+class ContatoRepository:
     def selectAll(self):
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Endereco).all()
+                data = db.session.query(Contato).all()
                 return data
 
         except NoResultFound:
@@ -18,10 +18,10 @@ class EnderecoRepository:
             db.session.rollback()
             return err
 
-    def buscaEnderecoPorId(self, enderecoId: int):
+    def buscaContatoPorId(self, contatoId: int):
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Endereco).filter(Endereco.enderecoId == enderecoId).one()
+                data = db.session.query(Contato).filter(Contato.contatoId == contatoId).one()
                 return data
 
         except NoResultFound:
@@ -31,10 +31,10 @@ class EnderecoRepository:
             db.session.rollback()
             return err
 
-    def buscaPorEscritorioId(self, escritorioId: int):
+    def buscaPorEscritorioId(self, contatoId: int):
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Endereco).filter(Endereco.escritorioId == escritorioId).all()
+                data = db.session.query(Contato).filter(Contato.contatoId == contatoId).all()
                 if len(data) == 0:
                     raise NoResultFound
 
@@ -50,7 +50,7 @@ class EnderecoRepository:
     def buscaPorAdvogadoId(self, advogadoId: int):
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Endereco).filter(Endereco.advogadoId == advogadoId).all()
+                data = db.session.query(Contato).filter(Contato.advogadoId == advogadoId).all()
                 if len(data) == 0:
                     raise NoResultFound
 

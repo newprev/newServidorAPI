@@ -2,10 +2,11 @@
 #Request e Responses em baixo
 
 from datetime import datetime
+from typing import Optional
 from sqlalchemy import ForeignKey, String, Column, Integer, Boolean, DateTime
 from sqlalchemy_utils import EmailType, PasswordType
 
-from database.database import Base
+from src.database.database import Base
 
 SCHEMES = [
     'pbkdf2_sha512',
@@ -13,7 +14,7 @@ SCHEMES = [
 ]
 
 class Advogado(Base):
-    __tablename__ = "Advogados"
+    __tablename__ = "Advogado"
 
     advogadoId = Column(Integer, primary_key=True, autoincrement=True)
     escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId"))
@@ -70,3 +71,13 @@ class AdvogadoResponse(BaseModel):
     confirmado: bool
     dataUltAlt: datetime
     dataCadastro: datetime
+
+class AdvogadoRequest(BaseModel):
+    escritorioId: int
+    primeiroNome: str
+    sobrenome: str
+    email: str
+    numeroOAB: str
+    cpf: str
+    nacionalidade: str
+    estadoCivil: str
