@@ -1,9 +1,12 @@
-from typing import List
+from pprint import pprint
+from typing import List, Any
 
 from fastapi import APIRouter, HTTPException, status
 
-from src.models.escritoriosModel import Escritorio, EscritorioResponse, EscritorioPostRequest
+from src.models.erroSchema import NewPrevErro
+from src.models.escritoriosModel import Escritorio
 from src.models.enderecoModel import Endereco
+from src.models.escritoriosSchema import EscritorioResponse, EscritorioPostRequest
 from src.repository.escritorioRep import EscritorioRepository
 from src.utils.helpers import decideEstado
 
@@ -48,33 +51,33 @@ def insereEscritorio(escritorioPost: EscritorioPostRequest):
     """
     Insere escritório por meio do modelo EscritorioPostRequest
     """
-    enderecoModel = Endereco(
-        endereco=escritorioPost.endereco,
-        numero=escritorioPost.numero,
-        cep=escritorioPost.cep,
-        complemento=escritorioPost.complemento,
-        cidade=escritorioPost.cidade,
-        estado=decideEstado(escritorioPost.estado),
-        bairro=escritorioPost.bairro
-    )
-    escritorioModel = Escritorio(
-        nomeFantasia=escritorioPost.nomeFantasia,
-        cnpj=escritorioPost.cnpj,
-        telefone=escritorioPost.telefone,
-        email=escritorioPost.email,
-        inscEstadual=escritorioPost.inscEstadual
-    )
+    enderecoModel = Endereco(**escritorioPost.endereco.dict())
+    escritorioModel = Escritorio(**escritorioPost.escritorio.dict())
 
     escritorioRepository: EscritorioRepository = EscritorioRepository()
-    escritorioInserido: dict = escritorioRepository.insreNovoEscritorio(escritorioModel, enderecoModel)
+    retornoRepo: Any[NewPrevErro, EscritorioPostRequest] = escritorioRepository.insreNovoEscritorio(escritorioModel, enderecoModel)
 
-    if not escritorioInserido:
+    print("\n1 ---------------- ")
+    pprint(retornoRepo.dict())
+    print("2 ----------------\n\n ")
+
+    if isinstance(retornoRepo, EscritorioPostRequest):
+        return retornoRepo
+
+    if retornoRepo.observacao is not None and 'Chave duplicada' in retornoRepo.observacao:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Não foi possível inserir o escritório"
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Advogado não pôde ser cadastrado"
         )
 
-    return escritorioInserido
+    if isinstance(retornoRepo.erro, KeyError):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Informacao errada: {retornoRepo.erro}"
+        )
+
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
 
 @escritorioRouter.delete('/{escritorioId}', status_code=status.HTTP_200_OK)
 def deletaEscritorio(escritorioId: int) -> dict:

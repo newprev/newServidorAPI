@@ -2,7 +2,8 @@ from random import randint
 from typing import List
 
 from fastapi import APIRouter, HTTPException, status
-from src.models.advogadosModel import AdvogadoResponse, AdvogadoRequest, Advogado
+from src.models.advogadosModel import Advogado
+from src.models.advogadosSchema import AdvogadoResponse, AdvogadoRequest
 from src.repository.advogadoRep import AdvogadoRepository
 
 TAG_PREFIX = "/advogado"

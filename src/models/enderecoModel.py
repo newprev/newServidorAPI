@@ -43,35 +43,10 @@ class Endereco(Base):
             "cep": self.cep,
             "complemento": self.complemento,
             "cidade": self.cidade,
-            "estado": self.estado.code,
+            "estado": self.estado,
             "bairro": self.bairro,
             "ativo": self.ativo,
             "dataUltAlt": f"{self.dataUltAlt}",
             "dataCadastro": f"{self.dataCadastro}"
         }
-
-
-from pydantic import BaseModel
-class EnderecoResponse(BaseModel):
-    enderecoId: int
-    escritorioId: Optional[int]
-    advogadoId: Optional[int]
-    endereco: str
-    numero: int
-    cep: str
-    complemento: Optional[str]
-    cidade: str
-    estado: str
-    bairro: str
-    ativo: bool
-    dataUltAlt: datetime
-    dataCadastro: datetime
-
-class EnderecoRequest(BaseModel):
-    endereco: str
-    numero: int
-    cep: str
-    complemento: Optional[str]
-    cidade: str
-    estado: str
-    bairro: str
+    

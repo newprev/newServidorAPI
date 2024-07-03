@@ -5,11 +5,11 @@ from typing import List
 from fastapi import APIRouter, HTTPException, status
 
 from src.models.advogadosModel import Advogado
-from src.models.prevAuth import PrevAuth, AuthResponse, PrimeiroAcessoEsqueceuSenha
+from src.models.prevAuthModel import PrevAuth
+from src.models.prevAuthSchema import AuthResponse, PrimeiroAcessoEsqueceuSenha, CodAcessoSchema
 from src.models.trocaSenhaModel import TrocaSenha, TrocaSenhaSchema
 from src.repository.prevAuthRep import PrevAuthRepository
 from src.utils.enums.authEnums import EsqueceuSenhaPAcesso
-from src.utils.enums.loginEnums import TipoTrocaSenha
 from src.utils.validators import validaCpf, validaEmail
 
 TAG_PREFIX = "/auth"
@@ -26,7 +26,7 @@ def buscaTodos() -> List[AuthResponse]:
         listaAllPrevAuth: List[PrevAuth]
         listaAllResponse: List[AuthResponse]
 
-        listaAllPrevAuth = PrevAuthRepository.selectAll()
+        listaAllPrevAuth = prevAuthRepository.selectAll()
         if listaAllPrevAuth is None:
             raise HTTPException(status_code=404, detail='Nenhuma autenticacao encontrada')
         listaAllResponse = [AuthResponse(**auth.toDict()) for auth in listaAllPrevAuth]
@@ -103,6 +103,12 @@ def trocaSenhaAdvogado(infoPrimeiroAcesso: PrimeiroAcessoEsqueceuSenha) -> dict:
         )
 
     return {"advogadoId": response.advogadoId}
+
+
+@prevAuthRouter.patch('advogados/auth/autenticaCodAcesso/<int:codAcesso>', status_code=status.HTTP_200_OK)
+def autenticaCodAcesso(codAcesso: CodAcessoSchema):
+    ...
+
 #
 # @escritorioRouter.delete('/{escritorioId}', status_code=status.HTTP_200_OK)
 # def deletaEscritorio(escritorioId: int) -> dict:

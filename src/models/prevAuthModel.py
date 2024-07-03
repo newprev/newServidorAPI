@@ -36,28 +36,3 @@ class PrevAuth(Base):
             "horaAuth": self.horaAuth,
             "dataCadastro": self.dataCadastro
         }
-
-
-from pydantic import BaseModel
-class AuthResponse(BaseModel):
-    authId: int
-    tipoAuth: enum.Enum
-    escritorioId: int
-    advogadoId: int
-    authDeOnde: enum.Enum
-    horaAuth: datetime
-    dataCadastro: datetime
-
-
-class AuthRequest(BaseModel):
-    authId: Optional[int]
-    tipoAuth: enum.Enum
-    escritorioId: Optional[int]
-    advogadoId: Optional[int]
-    horaAuth: datetime
-    authDeOnde: enum.Enum
-
-
-class PrimeiroAcessoEsqueceuSenha(BaseModel):
-    info: str
-    esqueceuSenha: bool

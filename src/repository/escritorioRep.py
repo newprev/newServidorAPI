@@ -1,10 +1,16 @@
+from pprint import pprint
+from typing import Union, Any
+
 from sqlalchemy.exc import IntegrityError
 
 from src.database.dbConnectionHandler import DBConnHandler
+from src.models.erroSchema import NewPrevErro
 from src.models.escritoriosModel import Escritorio
 from src.models.enderecoModel import Endereco
 
 from sqlalchemy.orm.exc import NoResultFound
+
+from src.models.escritoriosSchema import EscritorioPostRequest
 
 
 class EscritorioRepository:
@@ -30,38 +36,67 @@ class EscritorioRepository:
             db.session.rollback()
             return err
 
-    def insreNovoEscritorio(self, novoEscritorio: Escritorio, novoEndereco: Endereco) -> dict:
-        try:
-            with DBConnHandler() as db:
+    def insreNovoEscritorio(self, novoEscritorio: Escritorio, novoEndereco: Endereco):
+        with DBConnHandler() as db:
+            try:
                 # Insere novo escritorio
                 db.session.add(novoEscritorio)
-                db.session.commit()
-                db.session.refresh(novoEscritorio)
+                db.session.flush()
 
                 # Insere novo endereco
                 novoEndereco.escritorioId = novoEscritorio.escritorioId
                 db.session.add(novoEndereco)
+                db.session.flush()
+
+                # print(f"\n1 --------------------")
+                # pprint(novoEndereco.toDict())
+                # print(f"2 --------------------\n")
+
                 db.session.commit()
 
-                return {
-                    'novoEndereco': novoEndereco.toDict(),
-                    'novoEscritorio': novoEscritorio.toDict()
-                }
+                return EscritorioPostRequest(**{
+                    'endereco': novoEndereco.toDict(),
+                    'escritorio': novoEscritorio.toDict()
+                })
 
-        except IntegrityError as err:
-            argErr: str = err.args[0]
+            except IntegrityError as err:
+                argErr: str = err.args[0]
+                chaveDuplicada: bool = 'Duplicate entry' in argErr
 
-            if 'Duplicate entry' in argErr:
-                print(f"Chave duplicada\t")
+                print(f"\n[IntegrityError] insreNovoEscritorio - err: {err}")
 
-            print(f"\n[IntegrityError] insreNovoEscritorio - err: {err}")
-            db.session.rollback()
-            return None
+                # db.session.delete(novoEscritorio)
+                db.session.rollback()
 
-        except Exception as err:
-            print(f"\n[Exception] insreNovoEscritorio - err: {err} ")
-            db.session.rollback()
-            return None
+                return NewPrevErro(
+                    erro=err,
+                    detalhes=f"[IntegrityError] - {err.detail}",
+                    observacao="Chave duplicada" if chaveDuplicada else None,
+                    funcao="insreNovoEscritorio"
+                )
+
+            except KeyError as err:
+                print(f"\n[KeyError] insreNovoEscritorio - err: {err} ")
+                db.session.rollback()
+
+                return NewPrevErro(
+                    erro=err,
+                    detalhes=f"[KeyError] - err: {err}",
+                    funcao="insreNovoEscritorio",
+                )
+
+            except Exception as err:
+                print(f"\n[Exception] insreNovoEscritorio - err: {err} ")
+
+                db.session.rollback()
+
+                return NewPrevErro(
+                    erro=err,
+                    detalhes=f"[Exception] - err: {err}",
+                    funcao="insreNovoEscritorio",
+                )
+
+
 
     def deletaEscritorioPorId(self, escritorioId: int) -> int:
         try:

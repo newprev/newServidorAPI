@@ -1,7 +1,8 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException
-from src.models.enderecoModel import Endereco, EnderecoRequest, EnderecoResponse
+from src.models.enderecoModel import Endereco
+from src.models.enderecoSchema import EnderecoResponse, EnderecoRequest
 from src.repository.enderecoRep import EnderecoRepository
 
 TAG_PREFIX = "/endereco"

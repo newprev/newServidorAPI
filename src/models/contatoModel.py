@@ -33,24 +33,4 @@ class Contato(Base):
             "dataUltAlt": self.dataUltAlt,
             "dataCadastro": self.dataCadastro
         }
-
-
-from pydantic import BaseModel
-class ContatoResponse(BaseModel):
-    contatoId: int
-    escritorioId: Optional[int]
-    advogadoId: Optional[int]
-    numero: int
-    ehWatsapp: bool
-    ehTelegram: bool
-    principal: bool
-    dataUltAlt: datetime
-    dataCadastro: datetime
-
-class ContatoRequest(BaseModel):
-    escritorioId: Optional[int]
-    advogadoId: Optional[int]
-    numero: int
-    ehWatsapp: bool
-    ehTelegram: bool
-    principal: bool
+    

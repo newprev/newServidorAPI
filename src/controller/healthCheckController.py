@@ -1,7 +1,7 @@
 import datetime
 
 from fastapi import APIRouter
-from src.models.healthCheck import HealthCheckResponse
+from src.models.healthCheckSchema import HealthCheckResponse
 
 TAG_PREFIX = "/healthCheck"
 healthCheckRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])

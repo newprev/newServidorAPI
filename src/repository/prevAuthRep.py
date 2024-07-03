@@ -4,11 +4,12 @@ from sqlalchemy.exc import IntegrityError
 
 from src.database.dbConnectionHandler import DBConnHandler
 from src.models.advogadosModel import Advogado
-from src.models.prevAuth import PrevAuth
+from src.models.prevAuthModel import PrevAuth
 
 from sqlalchemy.orm.exc import NoResultFound
 
 from src.models.trocaSenhaModel import TrocaSenha, TrocaSenhaSchema
+from src.repository.util import newPrevSessao
 
 
 class PrevAuthRepository:

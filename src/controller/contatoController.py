@@ -1,7 +1,8 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException
-from src.models.contatoModel import Contato, ContatoResponse, ContatoRequest
+from src.models.contatoModel import Contato
+from src.models.contatoSchema import ContatoResponse, ContatoRequest
 from src.repository.contatoRep import ContatoRepository
 
 TAG_PREFIX = "/contato"
