@@ -48,10 +48,6 @@ class EscritorioRepository:
                 db.session.add(novoEndereco)
                 db.session.flush()
 
-                # print(f"\n1 --------------------")
-                # pprint(novoEndereco.toDict())
-                # print(f"2 --------------------\n")
-
                 db.session.commit()
 
                 return EscritorioPostRequest(**{
@@ -64,8 +60,6 @@ class EscritorioRepository:
                 chaveDuplicada: bool = 'Duplicate entry' in argErr
 
                 print(f"\n[IntegrityError] insreNovoEscritorio - err: {err}")
-
-                # db.session.delete(novoEscritorio)
                 db.session.rollback()
 
                 return NewPrevErro(

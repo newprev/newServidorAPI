@@ -82,10 +82,17 @@ def getEstadosDict() -> dict:
     }
 
 
-def decideEstado(siglaEstado: str) -> Choice:
+def decideEstadoFromSigla(siglaEstado: str) -> Choice:
     dictEstados: dict = getEstadosDict()[siglaEstado]
     return Choice(code=siglaEstado, value=dictEstados)
 
+
+def decideEstadoFromNome(nomeEstado: str) -> str:
+    for chave, valor in getEstadosDict():
+        if nomeEstado == valor:
+            return chave
+
+    return nomeEstado
 
 def getTipoAuth() -> List:
     return [

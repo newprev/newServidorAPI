@@ -8,7 +8,6 @@ from src.models.escritoriosModel import Escritorio
 from src.models.enderecoModel import Endereco
 from src.models.escritoriosSchema import EscritorioResponse, EscritorioPostRequest
 from src.repository.escritorioRep import EscritorioRepository
-from src.utils.helpers import decideEstado
 
 TAG_PREFIX = "/escritorio"
 escritorioRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])

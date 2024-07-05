@@ -43,7 +43,7 @@ class Endereco(Base):
             "cep": self.cep,
             "complemento": self.complemento,
             "cidade": self.cidade,
-            "estado": self.estado,
+            "estado": self.estado.code,
             "bairro": self.bairro,
             "ativo": self.ativo,
             "dataUltAlt": f"{self.dataUltAlt}",
