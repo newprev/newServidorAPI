@@ -56,10 +56,6 @@ def insereEscritorio(escritorioPost: EscritorioPostRequest):
     escritorioRepository: EscritorioRepository = EscritorioRepository()
     retornoRepo: Any[NewPrevErro, EscritorioPostRequest] = escritorioRepository.insreNovoEscritorio(escritorioModel, enderecoModel)
 
-    print("\n1 ---------------- ")
-    pprint(retornoRepo.dict())
-    print("2 ----------------\n\n ")
-
     if isinstance(retornoRepo, EscritorioPostRequest):
         return retornoRepo
 
