@@ -60,7 +60,7 @@ def insereEscritorio(escritorioPost: EscritorioPostRequest):
     if isinstance(retornoRepo, EscritorioPostRequest):
         escritorioResponse: EscritorioResponse = EscritorioResponse(**retornoRepo.escritorio.model_dump())
         emailModel: EmailModel = EmailModel(escritorio=escritorioResponse)
-        emailModel.sendBoasVindas()
+        emailModel.sendBoasVindasEscritorio()
 
         return retornoRepo
 

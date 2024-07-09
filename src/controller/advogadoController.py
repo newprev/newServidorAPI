@@ -4,7 +4,10 @@ from typing import List
 from fastapi import APIRouter, HTTPException, status
 from src.models.advogadosModel import Advogado
 from src.models.advogadosSchema import AdvogadoResponse, AdvogadoRequest
+from src.models.emailModel import EmailModel
+from src.models.escritoriosModel import Escritorio
 from src.repository.advogadoRep import AdvogadoRepository
+from src.repository.escritorioRep import EscritorioRepository
 
 TAG_PREFIX = "/advogado"
 advogadoRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])
@@ -41,21 +44,24 @@ def buscaPorAdvogadoPorId(advogadoId: int) -> AdvogadoResponse:
 @advogadoRouter.post('/', status_code=status.HTTP_201_CREATED)
 def insereAdvogado(advogadoEnviado: AdvogadoRequest) -> AdvogadoResponse:
     """
-    Insere advogado enviado
+    Insere advogado enviado e envia email
     """
-    novoAdvogado = Advogado(
-        primeiroNome=advogadoEnviado.primeiroNome,
-        sobrenome=advogadoEnviado.sobrenome,
-        email=advogadoEnviado.email,
-        numeroOAB=advogadoEnviado.numeroOAB,
-        cpf=advogadoEnviado.cpf,
-        nacionalidade=advogadoEnviado.nacionalidade,
-        estadoCivil=advogadoEnviado.estadoCivil,
-        senha=f"{randint(1000, 9999)}",
-        admin=False,
-        ativo=True,
-        confirmado=False
-    )
+    novoAdvogado: Advogado = Advogado(**advogadoEnviado.model_dump())
+    if novoAdvogado.escritorioId is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Escritorio não encontrado"
+        )
+
+    escritorioRep: EscritorioRepository = EscritorioRepository()
+    escritorioAtual: Escritorio = escritorioRep.buscaEscritorioPorId(novoAdvogado.escritorioId)
+
+    if escritorioAtual is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Escritorio não encontrado"
+        )
+
     advogadoRepository: AdvogadoRepository = AdvogadoRepository()
     novoAdvogado = advogadoRepository.insereNovoAdvogado(novoAdvogado)
 
@@ -65,6 +71,8 @@ def insereAdvogado(advogadoEnviado: AdvogadoRequest) -> AdvogadoResponse:
             detail="Não foi possível inserir o advogado"
         )
 
+    emailModel: EmailModel = EmailModel(adv=novoAdvogado, escritorio=escritorioAtual)
+    emailModel.sendBoasVindasAdvogado()
 
     return AdvogadoResponse(**novoAdvogado.toDict())
 

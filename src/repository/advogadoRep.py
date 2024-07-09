@@ -31,12 +31,10 @@ class AdvogadoRepository:
     def insereNovoAdvogado(self, novoAdvogado: Advogado):
         try:
             with DBConnHandler() as db:
+                novoAdvogado.senha = 'senhaTemp'
                 db.session.add(novoAdvogado)
-                print("\n\n1 ---------- Chegou aqui...")
+                db.session.flush()
                 db.session.commit()
-                print("2 ----------- Chegou aqui...")
-                db.session.refresh(novoAdvogado)
-                print("3 ----------- Chegou aqui...")
 
                 return novoAdvogado
         except NoResultFound:

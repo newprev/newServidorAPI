@@ -18,6 +18,7 @@ class EscritorioResponse(BaseModel):
 
 
 class EscritorioRequest(BaseModel):
+    escritorioId: Optional[int] = None
     nomeFantasia: str
     cnpj: Optional[str] = None
     telefone: str

@@ -3,7 +3,6 @@
 
 from datetime import datetime
 from sqlalchemy import ForeignKey, Column, Integer, BigInteger, Boolean, DateTime
-from typing import Optional
 
 from src.database.database import Base
 

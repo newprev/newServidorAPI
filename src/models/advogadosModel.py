@@ -17,7 +17,7 @@ class Advogado(Base):
     __tablename__ = "Advogado"
 
     advogadoId = Column(Integer, primary_key=True, autoincrement=True)
-    escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId"))
+    escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId"), nullable=False)
     primeiroNome = Column(String(20), nullable=False)
     sobrenome = Column(String(40), nullable=False)
     email = Column(EmailType, nullable=False, unique=True)

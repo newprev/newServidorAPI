@@ -78,7 +78,7 @@ class EmailModel:
             destinatario=self._advogadoAtual.email,
             assunto=f'Seja bem vindo(a), {self._advogadoAtual.primeiroNome}',
             corpoEmail=f'Olá!\nÉ um prazer ter você conosco. \n\nAo fazer o seu cadastro, o escritório {self._escritorio.nomeFantasia} criou uma senha '
-                       f'provisória. Ao acessar a nossa aplicação instalada na sua máquina (Desktop/Notebook), você precisará dessa senha.\n\n'
+                       f'provisória. Ao acessar a nossa aplicação instalada na sua máquina (Desktop/Notebook), você precisará dessa senha.'
                        f'Agradecemos seu acesso!',
         )
 
