@@ -6,7 +6,7 @@ from src.models.enderecoSchema import EnderecoRequest
 
 
 class EscritorioResponse(BaseModel):
-    escritorioId: int
+    escritorioId: Optional[int] = None
     nomeFantasia: str
     cnpj: Optional[str] = None
     telefone: str

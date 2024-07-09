@@ -37,7 +37,6 @@ class EnderecoRequest(BaseModel):
     def validaEstado(cls, v):
         for sigla, nome in getEstadosDict().items():
             if v == sigla or v == nome:
-                print(f"{sigla=}")
                 return sigla
 
         raise ValueError("Estado não encontrado")

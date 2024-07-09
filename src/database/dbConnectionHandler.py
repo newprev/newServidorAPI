@@ -16,7 +16,6 @@ class DBConnHandler:
         # Carregando variáveis de ambiente
         pathEnvVars = Path('') / '.env'
         if not pathEnvVars.is_file():
-            print(f'{pathEnvVars.absolute()=}')
             raise Exception('Não foi possível encontrar o arquivo com as variáveis de ambiente.')
         else:
             load_dotenv(pathEnvVars.absolute())

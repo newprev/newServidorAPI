@@ -3,6 +3,7 @@ from typing import List, Any
 
 from fastapi import APIRouter, HTTPException, status
 
+from src.models.emailModel import EmailModel
 from src.models.erroSchema import NewPrevErro
 from src.models.escritoriosModel import Escritorio
 from src.models.enderecoModel import Endereco
@@ -50,13 +51,17 @@ def insereEscritorio(escritorioPost: EscritorioPostRequest):
     """
     Insere escritório por meio do modelo EscritorioPostRequest
     """
-    enderecoModel = Endereco(**escritorioPost.endereco.dict())
-    escritorioModel = Escritorio(**escritorioPost.escritorio.dict())
+    enderecoModel = Endereco(**escritorioPost.endereco.model_dump())
+    escritorioModel = Escritorio(**escritorioPost.escritorio.model_dump())
 
     escritorioRepository: EscritorioRepository = EscritorioRepository()
     retornoRepo: Any[NewPrevErro, EscritorioPostRequest] = escritorioRepository.insreNovoEscritorio(escritorioModel, enderecoModel)
 
     if isinstance(retornoRepo, EscritorioPostRequest):
+        escritorioResponse: EscritorioResponse = EscritorioResponse(**retornoRepo.escritorio.model_dump())
+        emailModel: EmailModel = EmailModel(escritorio=escritorioResponse)
+        emailModel.sendBoasVindas()
+
         return retornoRepo
 
     if retornoRepo.observacao is not None and 'Chave duplicada' in retornoRepo.observacao:
