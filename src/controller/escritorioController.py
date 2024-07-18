@@ -15,7 +15,7 @@ escritorioRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])
 
 
 @escritorioRouter.get('/all', response_model=List[EscritorioResponse], status_code=status.HTTP_200_OK)
-def buscaTodos() -> List[EscritorioResponse]:
+def buscaTodos(limit: int = 10, offset: int = 0) -> List[EscritorioResponse]:
     """
     Retorna todos os advogados cadastrados no banco
     """
@@ -24,7 +24,7 @@ def buscaTodos() -> List[EscritorioResponse]:
         listaAllEscritorios: List[Escritorio]
         listaAllResponse: List[EscritorioResponse]
 
-        listaAllEscritorios = escritorioRepository.selectAll()
+        listaAllEscritorios = escritorioRepository.selectAll(limit=limit, offset=offset)
         if listaAllEscritorios is None:
             raise HTTPException(status_code=404, detail='Nenhum escritório encontrado')
         listaAllResponse = [EscritorioResponse(**escritorio.toDict()) for escritorio in listaAllEscritorios]

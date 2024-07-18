@@ -10,7 +10,7 @@ enderecoRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])
 
 
 @enderecoRouter.get('/all', response_model=List[EnderecoResponse], status_code=200)
-def buscaTodos() -> List[EnderecoRequest]:
+def buscaTodos(limit: int = 10, offset: int = 0) -> List[EnderecoRequest]:
     """
     Retorna todos os enderecos cadastrados no banco
     """
@@ -18,7 +18,7 @@ def buscaTodos() -> List[EnderecoRequest]:
     listaAllEnderecos: List[Endereco]
     listaAllResponse: List[EnderecoResponse]
 
-    listaAllEnderecos = enderecoRepository.selectAll()
+    listaAllEnderecos = enderecoRepository.selectAll(limit=limit, offset=offset)
     if listaAllEnderecos is None:
         raise HTTPException(status_code=404, detail='Nenhum endereço encontrado')
     listaAllResponse = [EnderecoResponse(**endereco.toDict()) for endereco in listaAllEnderecos]

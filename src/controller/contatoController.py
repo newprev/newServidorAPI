@@ -10,7 +10,7 @@ contatoRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])
 
 
 @contatoRouter.get('/all', response_model=List[ContatoResponse], status_code=200)
-def buscaTodos() -> List[ContatoRequest]:
+def buscaTodos(limit: int = 10, offset: int = 0) -> List[ContatoRequest]:
     """
     Retorna todos os contatos cadastrados no banco
     """
@@ -18,7 +18,7 @@ def buscaTodos() -> List[ContatoRequest]:
     listaAllContatos: List[Contato]
     listaAllResponse: List[ContatoResponse]
 
-    listaAllContatos = contatoRepository.selectAll()
+    listaAllContatos = contatoRepository.selectAll(limit=limit, offset=offset)
     if listaAllContatos is None:
         raise HTTPException(status_code=404, detail='Nenhum contato encontrado')
     listaAllResponse = [ContatoResponse(**contato.toDict()) for contato in listaAllContatos]

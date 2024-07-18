@@ -10,10 +10,10 @@ from src.models.advogadosModel import Advogado
 
 
 class AdvogadoRepository:
-    def selectAll(self):
+    def selectAll(self, limit: int, offset: int):
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Advogado).all()
+                data = db.session.query(Advogado).limit(limit).offset(offset).all()
                 return data
         except NoResultFound:
             return None

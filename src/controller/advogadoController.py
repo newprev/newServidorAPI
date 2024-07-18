@@ -15,7 +15,7 @@ advogadoRouter = APIRouter(prefix=TAG_PREFIX, tags=[TAG_PREFIX])
 
 
 @advogadoRouter.get('/all', response_model=List[AdvogadoResponse], status_code=200)
-def buscaTodos() -> List[AdvogadoResponse]:
+def buscaTodos(limit: int = 10, offset: int = 0) -> List[AdvogadoResponse]:
     """
     Retorna todos os advogados cadastrados no banco
     """
@@ -23,7 +23,7 @@ def buscaTodos() -> List[AdvogadoResponse]:
     listaAllAdv: List[Advogado]
     listaAllResponse: List[AdvogadoResponse]
 
-    listaAllAdv = advRepository.selectAll()
+    listaAllAdv = advRepository.selectAll(limit=limit, offset=offset)
     if listaAllAdv is None:
         raise HTTPException(status_code=404, detail='Nenhum advogado foi encontrado')
     listaAllResponse = [AdvogadoResponse(**adv.toDict()) for adv in listaAllAdv]

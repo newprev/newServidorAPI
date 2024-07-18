@@ -5,10 +5,10 @@ from sqlalchemy.orm.exc import NoResultFound
 
 
 class ContatoRepository:
-    def selectAll(self):
+    def selectAll(self, limit: int, offset: int):
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Contato).all()
+                data = db.session.query(Contato).limit(limit).offset(offset).all()
                 return data
 
         except NoResultFound:

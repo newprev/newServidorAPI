@@ -14,10 +14,10 @@ from src.models.escritoriosSchema import EscritorioPostRequest
 
 
 class EscritorioRepository:
-    def selectAll(self):
+    def selectAll(self, limit: int, offset: int):
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Escritorio).all()
+                data = db.session.query(Escritorio).limit(limit).offset(offset).all()
                 return data
         except NoResultFound:
             return None
