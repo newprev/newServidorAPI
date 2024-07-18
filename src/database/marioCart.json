@@ -1,0 +1,9 @@
+{
+  "emailHost": "",
+  "port": 123,
+  "emailHostUser": "",
+  "emailHostPassword": "",
+  "serverEmail": "",
+  "emailUseTls": false,
+  "emailUseSsl": false
+}
