@@ -1,5 +1,6 @@
+from pprint import pprint
 from random import randint
-from typing import List
+from typing import List, Any
 
 from fastapi import APIRouter, HTTPException, status
 from src.models.advogadosModel import Advogado
@@ -76,3 +77,26 @@ def insereAdvogado(advogadoEnviado: AdvogadoRequest) -> AdvogadoResponse:
 
     return AdvogadoResponse(**novoAdvogado.toDict())
 
+@advogadoRouter.patch('/{advogadoId}', response_model=AdvogadoRequest, status_code=status.HTTP_200_OK)
+def alteraAdvogado(advogadoId: int, adv: AdvogadoRequest) -> AdvogadoResponse:
+    """
+    Atualiza dados do Advogado, dado advogadoId
+    """
+    advogadoAAlterar: Advogado = Advogado(**adv.model_dump())
+
+    advogadoRep: AdvogadoRepository = AdvogadoRepository()
+    advogadoAlterado: Advogado = advogadoRep.alteraAdvogado(advogadoId, advogadoAAlterar)
+
+    if advogadoAlterado is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Não foi possível atualizar o advogado com as informações passadas"
+        )
+        return AdvogadoRequest()
+
+    emailModel: EmailModel = EmailModel(
+        adv=AdvogadoResponse(**advogadoAlterado.toDict())
+    )
+    emailModel.sendAlteracaoAdvogado()
+
+    return advogadoAAlterar

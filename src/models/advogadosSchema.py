@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -15,7 +16,7 @@ class AdvogadoResponse(BaseModel):
     ativo: bool
     confirmado: bool
     dataUltAlt: datetime
-    dataCadastro: datetime
+    dataCadastro: Optional[datetime] = None
 
 class AdvogadoRequest(BaseModel):
     escritorioId: int
@@ -26,3 +27,6 @@ class AdvogadoRequest(BaseModel):
     cpf: str
     nacionalidade: str
     estadoCivil: str
+    admin: Optional[bool] = None
+    ativo: Optional[bool] = None
+    confirmado: Optional[bool] = None

@@ -33,9 +33,9 @@ class Advogado(Base):
     dataCadastro = Column(DateTime, default=datetime.now, nullable=False)
 
     def __str__(self):
-        return f"id: {self.advogadoId}, nome: {self.primeiroNome}, email: {self.email}, OAB: {self.numeroOAB}"
+        return f"advogadoId: {self.advogadoId}, nome: {self.primeiroNome}, email: {self.email}, OAB: {self.numeroOAB}"
 
-    def toDict(self, enviaEscritorio: bool = True):
+    def toDict(self):
         return {
             "advogadoId": self.advogadoId,
             # "escritorioId": self.escritorioId.toDict() if enviaEscritorio else self.escritorioId.escritorioId,

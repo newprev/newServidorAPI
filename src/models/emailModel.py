@@ -84,6 +84,20 @@ class EmailModel:
 
         self._sendEmailProccess(email)
 
+    def sendAlteracaoAdvogado(self) -> None:
+        if self._advogadoAtual is None:
+            raise Exception('Modelo do advogado não enviado')
+
+        email: EmailSchema = EmailSchema(
+            remetente='thomas.anderson@newprev.dev.br',
+            destinatario=self._advogadoAtual.email,
+            assunto=f'Olá novamente, {self._advogadoAtual.primeiroNome}',
+            corpoEmail=f'Gostaríamos de informar que suas informações foram alteradas na nossa base de dados. Se foi você quem fez a alteração, ignore este email. Caso contrário, clique no link abaixo.'
+                       f'Agradecemos seu acesso!',
+        )
+
+        self._sendEmailProccess(email)
+
     def _carregaVariaveisDeAmbiente(self):
         """
             Carregando variáveis de ambiente
