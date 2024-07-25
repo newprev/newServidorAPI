@@ -5,9 +5,9 @@ from fastapi import APIRouter, HTTPException, status
 
 from src.models.emailModel import EmailModel
 from src.models.erroSchema import NewPrevErro
-from src.models.escritoriosModel import Escritorio
+from src.models.escritorioModel import Escritorio
 from src.models.enderecoModel import Endereco
-from src.models.escritoriosSchema import EscritorioResponse, EscritorioPostRequest
+from src.models.escritorioSchema import EscritorioResponse, EscritorioPostRequest, EscritorioCliente
 from src.repository.escritorioRep import EscritorioRepository
 
 TAG_PREFIX = "/escritorio"
@@ -45,6 +45,19 @@ def buscaEscritorioPorId(escritorioId: int) -> EscritorioResponse:
     escritorioResponse = EscritorioResponse(**escritorioBuscado.toDict())
 
     return escritorioResponse
+
+@escritorioRouter.get('/endereco/{escritorioId}', response_model=EscritorioCliente, status_code=status.HTTP_200_OK)
+def buscaEscritorioClientePorId(escritorioId: int) -> EscritorioCliente:
+    """
+    Retorna o escritorio e o seu respectivo endereco.
+    O model EscritorioCliente se refere ao modelo do escritorio no PrevCli
+    """
+    escritorioRepository: EscritorioRepository = EscritorioRepository()
+    escritorioBuscado: EscritorioCliente = escritorioRepository.buscaEscritorioEnderecoPorId(escritorioId)
+    if escritorioBuscado is None:
+        raise HTTPException(status_code=404, detail='Nenhum escritório e/ou endereco encontrado')
+
+    return escritorioBuscado
 
 @escritorioRouter.post('/', status_code=status.HTTP_201_CREATED)
 def insereEscritorio(escritorioPost: EscritorioPostRequest):

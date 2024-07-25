@@ -5,12 +5,12 @@ from sqlalchemy.exc import IntegrityError
 
 from src.database.dbConnectionHandler import DBConnHandler
 from src.models.erroSchema import NewPrevErro
-from src.models.escritoriosModel import Escritorio
+from src.models.escritorioModel import Escritorio
 from src.models.enderecoModel import Endereco
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from src.models.escritoriosSchema import EscritorioPostRequest
+from src.models.escritorioSchema import EscritorioPostRequest, EscritorioCliente
 
 
 class EscritorioRepository:
@@ -30,6 +30,26 @@ class EscritorioRepository:
             with DBConnHandler() as db:
                 data = db.session.query(Escritorio).filter(Escritorio.escritorioId == escritorioId).one()
                 return data
+        except NoResultFound:
+            return None
+        except Exception as err:
+            db.session.rollback()
+            return err
+
+    def buscaEscritorioEnderecoPorId(self, escritorioId: int) -> EscritorioCliente:
+        try:
+            with DBConnHandler() as db:
+                dataEscritorio: Escritorio = db.session.query(Escritorio).filter(Escritorio.escritorioId == escritorioId).one()
+                dataEndereco: Endereco = db.session.query(Endereco).filter(Endereco.escritorioId == escritorioId).one()
+
+                if dataEscritorio is None or dataEndereco is None:
+                    return None
+
+                return EscritorioCliente(**{
+                    **dataEscritorio.toDict(),
+                    **dataEndereco.toDict()
+                })
+
         except NoResultFound:
             return None
         except Exception as err:
@@ -89,8 +109,6 @@ class EscritorioRepository:
                     detalhes=f"[Exception] - err: {err}",
                     funcao="insreNovoEscritorio",
                 )
-
-
 
     def deletaEscritorioPorId(self, escritorioId: int) -> int:
         try:

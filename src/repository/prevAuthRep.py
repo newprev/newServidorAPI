@@ -1,5 +1,6 @@
 import datetime
 
+from dateutil.relativedelta import relativedelta
 from sqlalchemy.exc import IntegrityError
 
 from src.database.dbConnectionHandler import DBConnHandler
@@ -8,8 +9,9 @@ from src.models.prevAuthModel import PrevAuth
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from src.models.trocaSenhaModel import TrocaSenha, TrocaSenhaSchema
-from src.repository.util import newPrevSessao
+from src.models.prevAuthSchema import CodAcessoSchema
+from src.models.trocaSenhaModel import TrocaSenha
+from src.models.trocaSenhaSchema import TrocaSenhaSchema
 
 
 class PrevAuthRepository:
@@ -35,22 +37,36 @@ class PrevAuthRepository:
             db.session.rollback()
             return err
 
-    def buscaAdvogadoPorCPF(self, cpfAdvogado: str) -> Advogado:
+    def buscaAdvogadoPorCPF(self, cpfAdvogado: str, confirmado: bool = None, ativo: bool = None) -> Advogado:
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Advogado).filter(Advogado.cpf == cpfAdvogado).one()
-                return data
+                data = db.session.query(Advogado).filter(Advogado.cpf == cpfAdvogado)
+
+                if confirmado is not None:
+                    data = data.filter(Advogado.confirmado == confirmado)
+
+                if ativo is not None:
+                    data = data.filter(Advogado.ativo == ativo)
+
+                return data.one()
         except NoResultFound:
             return None
         except Exception as err:
             db.session.rollback()
             return err
 
-    def buscaAdvogadoPorEmail(self, emailAdvogado: str) -> Advogado:
+    def buscaAdvogadoPorEmail(self, emailAdvogado: str, confirmado: bool = None, ativo: bool = None) -> Advogado:
         try:
             with DBConnHandler() as db:
-                data = db.session.query(Advogado).filter(Advogado.email == emailAdvogado).one()
-                return data
+                data = db.session.query(Advogado).filter(Advogado.email == emailAdvogado)
+
+                if confirmado is not None:
+                    data = data.filter(Advogado.confirmado == confirmado)
+
+                if ativo is not None:
+                    data = data.filter(Advogado.ativo == ativo)
+
+                return data.one()
         except NoResultFound:
             return None
         except Exception as err:
@@ -76,38 +92,40 @@ class PrevAuthRepository:
             db.session.rollback()
             return None
 
-    # def insreNovoPrevAuth(self, prevAuth: PrevAuth) -> dict:
-    #     try:
-    #         with DBConnHandler() as db:
-    #             # Insere novo escritorio
-    #             db.session.add(novoEscritorio)
-    #             db.session.commit()
-    #             db.session.refresh(novoEscritorio)
-    #
-    #             # Insere novo endereco
-    #             novoEndereco.escritorioId = novoEscritorio.escritorioId
-    #             db.session.add(novoEndereco)
-    #             db.session.commit()
-    #
-    #             return {
-    #                 'novoEndereco': novoEndereco.toDict(),
-    #                 'novoEscritorio': novoEscritorio.toDict()
-    #             }
-    #
-    #     except IntegrityError as err:
-    #         argErr: str = err.args[0]
-    #
-    #         if 'Duplicate entry' in argErr:
-    #             print(f"Chave duplicada\t")
-    #
-    #         print(f"\n[IntegrityError] insreNovoEscritorio - err: {err}")
-    #         db.session.rollback()
-    #         return None
-    #
-    #     except Exception as err:
-    #         print(f"\n[Exception] insreNovoEscritorio - err: {err} ")
-    #         db.session.rollback()
-    #         return None
+    def buscaConfirmaCodPrimeiroAcesso(self, infoCodAcesso: CodAcessoSchema) -> bool:
+        try:
+            with DBConnHandler() as db:
+                data = db.session.query(TrocaSenha).filter(
+                    TrocaSenha.codAcesso == infoCodAcesso.codigo,
+                    TrocaSenha.escritorioId == TrocaSenha.escritorioId,
+                    TrocaSenha.primAcesso == True,
+                    TrocaSenha.verificado == False
+                )
+
+                if infoCodAcesso.advogadoId is not None:
+                    data = data.filter(TrocaSenha.advogadoId == infoCodAcesso.advogadoId)
+
+                trocaSenha: TrocaSenha = data.one()
+                tempoDecorrido: relativedelta = relativedelta(datetime.timezone.now(), trocaSenha.dataCadastro)
+                if tempoDecorrido.minutes < 10:
+                    trocaSenha.verificado = True
+
+                    db.session.refresh(trocaSenha)
+                    db.session.commit()
+                    return True
+
+                db.session.rollback()
+                return False
+
+        except NoResultFound as err:
+            print(f"buscaConfirmaCodPrimeiroAcesso: err: {err}")
+            db.session.rollback()
+            return False
+
+        except Exception as err:
+            print(f"buscaConfirmaCodPrimeiroAcesso: err: {err}")
+            db.session.rollback()
+            return False
 
     def deletaPrevAuthPorId(self, authId: int) -> int:
         try:

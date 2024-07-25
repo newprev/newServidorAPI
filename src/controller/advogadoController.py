@@ -5,8 +5,9 @@ from typing import List, Any
 from fastapi import APIRouter, HTTPException, status
 from src.models.advogadosModel import Advogado
 from src.models.advogadosSchema import AdvogadoResponse, AdvogadoRequest
+from src.models.auxiliares.AdvogadoEscritorioSchema import AdvogadoEscritorio
 from src.models.emailModel import EmailModel
-from src.models.escritoriosModel import Escritorio
+from src.models.escritorioModel import Escritorio
 from src.repository.advogadoRep import AdvogadoRepository
 from src.repository.escritorioRep import EscritorioRepository
 
@@ -30,7 +31,7 @@ def buscaTodos(limit: int = 10, offset: int = 0) -> List[AdvogadoResponse]:
 
     return listaAllResponse
 
-@advogadoRouter.get('/{advogadoId}', response_model=AdvogadoResponse, status_code=200)
+@advogadoRouter.get('/{advogadoId}/', response_model=AdvogadoResponse, status_code=200)
 def buscaPorAdvogadoPorId(advogadoId: int) -> AdvogadoResponse:
     """
     Busca o advogado dado Id
@@ -41,6 +42,18 @@ def buscaPorAdvogadoPorId(advogadoId: int) -> AdvogadoResponse:
         raise HTTPException(status_code=404, detail='Advogado não encontrado')
 
     return advogadoProcurado
+
+@advogadoRouter.get('/escritorio/endereco/{advogadoId}/', response_model=AdvogadoEscritorio, status_code=200)
+def buscaAdvogadoEscritorioPorAdvogadoId(advogadoId: int) -> AdvogadoEscritorio:
+    """
+    Busca o advogado e o escritorio dado Id
+    """
+    advRepository: AdvogadoRepository = AdvogadoRepository()
+    advEscritorioEncontrado: AdvogadoEscritorio = advRepository.buscaAdvogadoEscritorio(advogadoId)
+    if advEscritorioEncontrado is None:
+        raise HTTPException(status_code=404, detail='Advogado e/ou escritorio não encontrado')
+
+    return advEscritorioEncontrado
 
 @advogadoRouter.post('/', status_code=status.HTTP_201_CREATED)
 def insereAdvogado(advogadoEnviado: AdvogadoRequest) -> AdvogadoResponse:
@@ -56,7 +69,6 @@ def insereAdvogado(advogadoEnviado: AdvogadoRequest) -> AdvogadoResponse:
 
     escritorioRep: EscritorioRepository = EscritorioRepository()
     escritorioAtual: Escritorio = escritorioRep.buscaEscritorioPorId(novoAdvogado.escritorioId)
-
     if escritorioAtual is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -65,8 +77,7 @@ def insereAdvogado(advogadoEnviado: AdvogadoRequest) -> AdvogadoResponse:
 
     advogadoRepository: AdvogadoRepository = AdvogadoRepository()
     novoAdvogado = advogadoRepository.insereNovoAdvogado(novoAdvogado)
-
-    if not novoAdvogado:
+    if novoAdvogado is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Não foi possível inserir o advogado"

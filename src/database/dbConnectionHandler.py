@@ -35,7 +35,7 @@ class DBConnHandler:
         return self.__engine
 
     def __enter__(self):
-        sessionMake = sessionmaker(bind=self.__engine)
+        sessionMake = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.session = sessionMake()
         return self
 

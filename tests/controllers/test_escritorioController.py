@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 from httpx import Response
 
 from main import app
-from src.models.escritoriosModel import EscritorioResponse
+from src.models.escritorioModel import EscritorioResponse
 
 HEADERS = {"content-type": "application/json"}
 

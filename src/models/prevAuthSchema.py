@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import BaseModel
 from enum import Enum
 
+
 class AuthResponse(BaseModel):
     authId: int
     tipoAuth: Enum
@@ -29,4 +30,7 @@ class PrimeiroAcessoEsqueceuSenha(BaseModel):
 
 
 class CodAcessoSchema(BaseModel):
+    escritorioId: int
+    advogadoId: Optional[int] = None
     codigo: int
+

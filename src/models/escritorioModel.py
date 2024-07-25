@@ -17,6 +17,7 @@ class Escritorio(Base):
     ESTADO = getEstados()
 
     escritorioId = Column(Integer, primary_key=True, autoincrement=True)
+    nomeEscritorio = Column(String(50))
     nomeFantasia = Column(String(50))
     cnpj = Column(String(14), nullable=True, unique=True)
     telefone = Column(String(11), nullable=True, unique=True)
@@ -32,6 +33,7 @@ class Escritorio(Base):
     def toDict(self):
         return {
             "escritorioId": self.escritorioId,
+            "nomeEscritorio": self.nomeEscritorio,
             "nomeFantasia": self.nomeFantasia,
             "cnpj": self.cnpj,
             "telefone": self.telefone,

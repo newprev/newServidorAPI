@@ -13,6 +13,7 @@ SCHEMES = [
     'md5_crypt'
 ]
 
+
 class Advogado(Base):
     __tablename__ = "Advogado"
 
@@ -38,7 +39,7 @@ class Advogado(Base):
     def toDict(self):
         return {
             "advogadoId": self.advogadoId,
-            # "escritorioId": self.escritorioId.toDict() if enviaEscritorio else self.escritorioId.escritorioId,
+            "escritorioId": self.escritorioId,
             "primeiroNome": self.primeiroNome,
             "sobrenome": self.sobrenome,
             "email": self.email,

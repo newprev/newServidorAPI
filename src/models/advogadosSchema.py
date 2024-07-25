@@ -12,9 +12,9 @@ class AdvogadoResponse(BaseModel):
     cpf: str
     nacionalidade: str
     estadoCivil: str
-    admin: bool
+    admin: bool = False
     ativo: bool
-    confirmado: bool
+    confirmado: bool = False
     dataUltAlt: datetime
     dataCadastro: Optional[datetime] = None
 

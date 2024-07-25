@@ -18,8 +18,9 @@ class TrocaSenha(Base):
     escritorioId = Column(Integer, ForeignKey("Escritorio.escritorioId"), nullable=True)
     advogadoId = Column(Integer, ForeignKey("Advogado.advogadoId"), nullable=True)
     codAcesso = Column(Integer, primary_key=True)
+    verificado = Column(Boolean, nullable=False, default=False)
     primAcesso = Column(Boolean, nullable=False, default=True)
-    tipoTroca = Column(Enum(EsqueceuSenhaPAcesso, values_callable=lambda obj: [e.value for e in obj]))
+    # tipoTroca = Column(Enum(EsqueceuSenhaPAcesso, values_callable=lambda obj: [e.value for e in obj]))
     dataUltAlt = Column(DateTime, default=datetime.now(), nullable=False)
     dataCadastro = Column(DateTime, default=datetime.now(), nullable=False)
 
@@ -33,19 +34,8 @@ class TrocaSenha(Base):
             "advogadoId": self.advogadoId,
             "codAcesso": self.codAcesso,
             "primAcesso": self.primAcesso,
-            "tipoTroca": self.tipoTroca,
+            "verificado": self.verificado,
+            # "tipoTroca": self.tipoTroca,
             "dataUltAlt": self.dataUltAlt,
             "dataCadastro": self.dataCadastro,
         }
-
-
-from pydantic import BaseModel
-class TrocaSenhaSchema(BaseModel):
-    acessoId: int
-    escritorioId: Optional[int]
-    advogadoId: Optional[int]
-    codAcesso: int
-    primAcesso: bool
-    tipoTroca: EsqueceuSenhaPAcesso
-    dataUltAlt: datetime
-    dataCadastro: datetime
